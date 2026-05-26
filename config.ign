@@ -39,30 +39,26 @@
         "overwrite": true,
         "path": "/etc/ssh/sshd_config.d/10-custom.conf",
         "contents": {
-          "compression": "",
-          "source": "data:,HostKeyAlgorithms%20ssh-ed25519%0AKexAlgorithms%20mlkem768x25519-sha256%0APubkeyAcceptedKeyTypes%20ssh-ed25519%2Csk-ssh-ed25519%40openssh.com%0ACiphers%20aes256-gcm%40openssh.com%0AMACs%20-*%0AAllowUsers%20thefutureisprivate"
+          "source": "https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/ssh/sshd_config.d/10-custom.conf"
         },
         "mode": 420
       },
       {
         "path": "/etc/containers/containers.conf",
         "contents": {
-          "compression": "",
-          "source": "data:;base64,W2NvbnRhaW5lcnNdCmxhYmVsID0gZmFsc2UKCltlbmdpbmVdCnJ1bnRpbWUgPSAicnVuc2MiCgpbZW5naW5lLnJ1bnRpbWVzXQpydW5zYyA9IFsiL3Vzci9sb2NhbC9iaW4vcnVuc2MiXQo="
+          "source": "https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/containers/containers.conf"
         }
       },
       {
         "path": "/etc/systemd/system/gvisor-auto-update.service",
         "contents": {
-          "compression": "gzip",
-          "source": "data:;base64,H4sIAAAAAAAC/7RUwW7jNhC98yt028NC1m7R3RYLCNjE7qZGkyCw4gZoEBQ0NZEHJjnqzNCJLv32Qlbs2m6CoED2Ysy8N3x8tMh3O4+od2YC4hhbRYrlvK2tQtb8jkJsZvBXQgYpI+gD8Sqn6DHCSC03oObkXoFf4E7hnhjKmtwKeCTAa3RgzG01VHfmumuhpAiyJDWzFBUDTJDBKXFXNuveQJ42dtjcEK8wNv/yBadYHA2ZXx7BVWpZyyIJFwuMhXiANvu0R7nEPsulyvKcIZBCHm2A3HqfvVuqtvKlKESJbQOjhqjxYFuUkaPwtF/B4MEKyLYovFUQLR5//vzn5x97Z+LevaXYSJb208cf3krTUVSLEbjOZYkh3+yRrz9+b/3tMfY+xoBIClnusv2z9v0rOnsy792SHmLGRPql/xmkXhQ4XBmozux7fvwfi8I6y/94ZT7b3EFPzvrNTTRm0kUb0M0FuFROYMa2tQv0qN0ppVhjbCrQ0pyTW10BC0Xbc8PsBQTibgKxu2FU6M0khYG7pEt4uGJco4cGZAD73ipMoH9uh9j0anzQX4d225Or0kJAyxbrvlVwOvbkVruBDUJRmfwZU2rlgPmVAhwBov0DOwB/A47gz6mRZ+ALqpOH55jrFO3imOo9lxjXKLjwO7TqRCGUooxOzQyG4qSuGUS+2YAeQcodcWkDSGt3f9QWn4H1fTAdotV8OqnOppMn9Ci7LqiG8qcPH8zgYWy9P2G3xN5W2oSpVVzDHv0NfR+kX2WD5Nuw/M/A319pIeRB+yCdRlHr/Z25sVGhPu3KkLxingR4G8L/BAAA//+y3KHw4QUAAA=="
+          "source": "https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/systemd/system/gvisor-auto-update.service"
         }
       },
       {
         "path": "/etc/systemd/system/gvisor-auto-update.timer",
         "contents": {
-          "compression": "",
-          "source": "data:,%5BUnit%5D%0ADescription%3Dgvisor-auto-update%20daily%0A%0A%5BTimer%5D%0AOnCalendar%3Ddaily%0AAccuracySec%3D1m%0ARandomizedDelaySec%3D2h%0APersistent%3Dtrue%0A%0A%5BInstall%5D%0AWantedBy%3Dtimers.target%0A"
+          "source": "https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/systemd/system/gvisor-auto-update.timer"
         }
       }
     ],

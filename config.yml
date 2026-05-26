@@ -98,27 +98,20 @@ storage:
         }"
 
     - path: '/etc/ssh/sshd_config.d/10-custom.conf'
-      mode: 420
-      overwrite: true
       contents:
-        inline: "HostKeyAlgorithms ssh-ed25519\n\
-          KexAlgorithms mlkem768x25519-sha256\n\
-          PubkeyAcceptedKeyTypes ssh-ed25519,sk-ssh-ed25519@openssh.com\n\
-          Ciphers aes256-gcm@openssh.com\n\
-          MACs -*\n\
-          AllowUsers thefutureisprivate"
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/ssh/sshd_config.d/10-custom.conf' # yamllint disable-line rule:line-length
 
     - path: '/etc/containers/containers.conf'
       contents:
-        local: 'etc/containers/containers.conf'
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/containers/containers.conf' # yamllint disable-line rule:line-length
 
     - path: '/etc/systemd/system/gvisor-auto-update.service'
       contents:
-        local: 'etc/systemd/system/gvisor-auto-update.service'
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/systemd/system/gvisor-auto-update.service' # yamllint disable-line rule:line-length
 
     - path: '/etc/systemd/system/gvisor-auto-update.timer'
       contents:
-        local: 'etc/systemd/system/gvisor-auto-update.timer'
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/systemd/system/gvisor-auto-update.timer' # yamllint disable-line rule:line-length
 
   links:
     - path: '/etc/systemd/system/timers.target.wants/gvisor-auto-update.timer'
