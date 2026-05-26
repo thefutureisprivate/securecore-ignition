@@ -9,3 +9,4 @@
 - Configures gVisor as the default Podman runtime and enables automatic updates for gVisor and container images
 - Enables Unbound with local DNSSEC validation
 - Installs `qemu-guest-agent`
+- Enrolls the Secureblue Secure Boot certificate

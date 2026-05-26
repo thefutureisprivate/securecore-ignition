@@ -47,9 +47,10 @@ systemd:
         [Service]\n\
         Type=oneshot\n\
         RemainAfterExit=yes\n\
-        ExecStart=/usr/bin/systemctl mask --now zincati.service \n\
+        ExecStart=/usr/bin/systemctl mask --now zincati.service\n\
         ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'n\\ny\\ny\\n' | /usr/bin/ujust set-kargs-hardening\"\n\
-        ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/ujust enroll-secureblue-secure-boot-key\"\n\
+        ExecStart=-/usr/bin/mokutil --timeout -1\n\
+        ExecStart=-/usr/bin/bash -c \"/usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/mokutil --import /etc/pki/akmods/certs/akmods-secureblue.der\"\n\
         ExecStart=/usr/bin/ujust dns-selector resolver unbound\n\
         ExecStart=/usr/bin/ujust dns-selector dnssec on\n\
         ExecStart=/usr/bin/ujust toggle-user-motd\n\

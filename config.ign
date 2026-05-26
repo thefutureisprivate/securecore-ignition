@@ -62,7 +62,7 @@
         "path": "/etc/systemd/system/gvisor-auto-update.timer",
         "contents": {
           "compression": "",
-          "source": "data:,%5BUnit%5D%0ADescription%3Dgvisor-auto-update%20daily%2C%2015%20mintues%20after%20OS%20updates%0A%0A%5BTimer%5D%0AOnCalendar%3D*-*-*%2004%3A15%0APersistent%3Dtrue%0A%0A%5BInstall%5D%0AWantedBy%3Dtimers.target%0A"
+          "source": "data:,%5BUnit%5D%0ADescription%3Dgvisor-auto-update%20daily%0A%0A%5BTimer%5D%0AOnCalendar%3Ddaily%0AAccuracySec%3D1m%0ARandomizedDelaySec%3D2h%0APersistent%3Dtrue%0A%0A%5BInstall%5D%0AWantedBy%3Dtimers.target%0A"
         }
       }
     ],
@@ -81,7 +81,7 @@
         "name": "rebase.service"
       },
       {
-        "contents": "[Unit]\nConditionPathExists=/var/lib/rebase.stamp\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/systemctl mask --now zincati.service \nExecStart=/usr/bin/bash -c \"/usr/bin/printf 'n\\ny\\ny\\n' | /usr/bin/ujust set-kargs-hardening\"\nExecStart=/usr/bin/bash -c \"/usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/ujust enroll-secureblue-secure-boot-key\"\nExecStart=/usr/bin/ujust dns-selector resolver unbound\nExecStart=/usr/bin/ujust dns-selector dnssec on\nExecStart=/usr/bin/ujust toggle-user-motd\nExecStart=/usr/bin/rpm-ostree install qemu-guest-agent\nExecStart=/usr/bin/systemctl disable rebase\nExecStart=/usr/bin/rm /etc/systemd/system/rebase.service\nExecStart=/usr/bin/rm /var/lib/rebase.stamp\nExecStart=/usr/bin/systemctl disable postrebase\nExecStart=/usr/bin/rm /etc/systemd/system/postrebase.service\nExecStart=/usr/bin/systemctl --no-block reboot\n[Install]\nWantedBy=multi-user.target",
+        "contents": "[Unit]\nConditionPathExists=/var/lib/rebase.stamp\n[Service]\nType=oneshot\nRemainAfterExit=yes\nExecStart=/usr/bin/systemctl mask --now zincati.service\nExecStart=/usr/bin/bash -c \"/usr/bin/printf 'n\\ny\\ny\\n' | /usr/bin/ujust set-kargs-hardening\"\nExecStart=-/usr/bin/mokutil --timeout -1\nExecStart=-/usr/bin/bash -c \"/usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/mokutil --import /etc/pki/akmods/certs/akmods-secureblue.der\"\nExecStart=/usr/bin/ujust dns-selector resolver unbound\nExecStart=/usr/bin/ujust dns-selector dnssec on\nExecStart=/usr/bin/ujust toggle-user-motd\nExecStart=/usr/bin/rpm-ostree install qemu-guest-agent\nExecStart=/usr/bin/systemctl disable rebase\nExecStart=/usr/bin/rm /etc/systemd/system/rebase.service\nExecStart=/usr/bin/rm /var/lib/rebase.stamp\nExecStart=/usr/bin/systemctl disable postrebase\nExecStart=/usr/bin/rm /etc/systemd/system/postrebase.service\nExecStart=/usr/bin/systemctl --no-block reboot\n[Install]\nWantedBy=multi-user.target",
         "enabled": true,
         "name": "postrebase.service"
       },
