@@ -1,0 +1,124 @@
+---
+variant: 'fcos'
+version: '1.6.0'
+
+passwd:
+  users:
+    - name: 'thefutureisprivate'
+      groups:
+        - 'wheel'
+      password_hash: '$y$j9T$9MYl7G1vSZbv1TcWT57iu1$uXrbU3ZDbDhs4EWJWcJYVLekCAZ.Rf8CCVih1V/XRT8'
+      ssh_authorized_keys:
+        - 'sk-ssh-ed25519@openssh.com AAAAGnNrLXNzaC1lZDI1NTE5QG9wZW5zc2guY29tAAAAIBfXZD+wGDP7EXhQODSRVL4LsGYJziYnMOMkOquiHrGgAAAAFnNzaDp0aGVmdXR1cmVpc3ByaXZhdGU= contact@thefutureisprivate.dev' # yamllint disable rule:line-length
+
+systemd:
+  units:
+    - name: 'rebase.service'
+      enabled: true
+      # yamllint disable rule:line-length
+      contents: "[Unit]\n\
+        Description=Rebase system to securecore\n\
+        # We run after `systemd-machine-id-commit.service` to ensure that\n\
+        # `ConditionFirstBoot=true` services won't rerun on the next boot.\n\
+        After=systemd-machine-id-commit.service\n\
+        After=network-online.target\n\
+        Before=zincati.service\n\
+        ConditionPathExists=!/var/lib/%N.stamp\n\
+        [Service]\n\
+        Type=oneshot\n\
+        RemainAfterExit=yes\n\
+        ExecStart=/usr/bin/systemctl disable --now zincati.service\n\
+        ExecStart=/usr/bin/systemctl stop rpm-ostreed-automatic.timer rpm-ostreed-automatic.service\n\
+        ExecStart=/usr/bin/rpm-ostree rebase ostree-image-signed:docker://ghcr.io/secureblue/securecore-main-hardened:latest\n\
+        ExecStart=/usr/bin/cp /usr/etc/containers/policy.json /etc/containers/policy.json\n\
+        ExecStart=/usr/bin/rm /etc/pki/containers/secureblue-2025.pub\n\
+        ExecStart=/usr/bin/systemctl start gvisor-auto-update.service\n\
+        ExecStart=/usr/bin/touch /var/lib/%N.stamp\n\
+        ExecStart=/usr/bin/systemctl --no-block reboot\n\
+        [Install]\n\
+        WantedBy=multi-user.target"
+      # yamllint enable rule:line-length
+
+    - name: 'postrebase.service'
+      enabled: true
+      # yamllint disable rule:line-length
+      contents: "[Unit]\n\
+        ConditionPathExists=/var/lib/rebase.stamp\n\
+        [Service]\n\
+        Type=oneshot\n\
+        RemainAfterExit=yes\n\
+        ExecStart=/usr/bin/systemctl mask --now zincati.service \n\
+        ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'n\\ny\\ny\\n' | /usr/bin/ujust set-kargs-hardening\"\n\
+        ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/ujust enroll-secureblue-secure-boot-key\"\n\
+        ExecStart=/usr/bin/ujust dns-selector resolver unbound\n\
+        ExecStart=/usr/bin/ujust dns-selector dnssec on\n\
+        ExecStart=/usr/bin/ujust toggle-user-motd\n\
+        ExecStart=/usr/bin/rpm-ostree install qemu-guest-agent\n\
+        ExecStart=/usr/bin/systemctl disable rebase\n\
+        ExecStart=/usr/bin/rm /etc/systemd/system/rebase.service\n\
+        ExecStart=/usr/bin/rm /var/lib/rebase.stamp\n\
+        ExecStart=/usr/bin/systemctl disable postrebase\n\
+        ExecStart=/usr/bin/rm /etc/systemd/system/postrebase.service\n\
+        ExecStart=/usr/bin/systemctl --no-block reboot\n\
+        [Install]\n\
+        WantedBy=multi-user.target"
+      # yamllint enable rule:line-length
+
+    - name: 'podman-auto-update.timer'
+      enabled: true
+
+storage:
+  files:
+    - path: '/etc/pki/containers/secureblue-2025.pub'
+      mode: 420
+      contents:
+        inline: "-----BEGIN PUBLIC KEY-----\n\
+          MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdruKsOhUkgdd0lNDHNBymE2Wyb/p\n\
+          GVnx59QbNoGFbImqZLRVt6uQnO9MfiHU9IZiJl9aNetfAqDsgsltAUQnXQ==\n\
+          -----END PUBLIC KEY-----"
+
+    - path: '/etc/containers/policy.json'
+      mode: 420
+      overwrite: true
+      contents:
+        inline: "{\n\
+          \"default\": [{\"type\": \"reject\"}],\n\
+          \"transports\": {\n\
+            \"docker\": {\n\
+              \"ghcr.io/secureblue\": [\n\
+                {\n\
+                  \"type\": \"sigstoreSigned\",\n\
+                  \"keyPath\": \"/etc/pki/containers/secureblue-2025.pub\",\n\
+                  \"signedIdentity\": {\"type\": \"matchRepository\"}\n\
+                }\n\
+              ]\n\
+            }\n\
+          }\n\
+        }"
+
+    - path: '/etc/ssh/sshd_config.d/10-custom.conf'
+      mode: 420
+      overwrite: true
+      contents:
+        inline: "HostKeyAlgorithms ssh-ed25519\n\
+          KexAlgorithms mlkem768x25519-sha256\n\
+          PubkeyAcceptedKeyTypes ssh-ed25519,sk-ssh-ed25519@openssh.com\n\
+          Ciphers aes256-gcm@openssh.com\n\
+          MACs -*\n\
+          AllowUsers thefutureisprivate"
+
+    - path: '/etc/containers/containers.conf'
+      contents:
+        local: 'etc/containers/containers.conf'
+
+    - path: '/etc/systemd/system/gvisor-auto-update.service'
+      contents:
+        local: 'etc/systemd/system/gvisor-auto-update.service'
+
+    - path: '/etc/systemd/system/gvisor-auto-update.timer'
+      contents:
+        local: 'etc/systemd/system/gvisor-auto-update.timer'
+
+  links:
+    - path: '/etc/systemd/system/timers.target.wants/gvisor-auto-update.timer'
+      target: '/etc/systemd/system/gvisor-auto-update.timer'
