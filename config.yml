@@ -52,6 +52,8 @@ systemd:
         ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/mokutil --import /usr/share/pki/akmods/certs/akmods-secureblue.der\"\n\
         ExecStart=/usr/bin/ujust dns-selector resolver unbound\n\
         ExecStart=/usr/bin/ujust dns-selector dnssec on\n\
+        ExecStart=/usr/bin/install -d -o thefutureisprivate -g thefutureisprivate -m 700 /var/home/thefutureisprivate/.config\n\
+        ExecStart=/usr/bin/install -o thefutureisprivate -g thefutureisprivate -m 600 /dev/null /var/home/thefutureisprivate/.config/no-show-user-motd\n\
         ExecStart=/usr/bin/ujust toggle-bash-environment-lockdown true true\n\
         ExecStart=/usr/bin/rpm-ostree install qemu-guest-agent\n\
         ExecStart=/usr/bin/systemctl disable rebase\n\
