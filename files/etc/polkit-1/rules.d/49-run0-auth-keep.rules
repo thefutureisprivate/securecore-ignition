@@ -1,0 +1,8 @@
+polkit.addRule(function(action, subject) {
+    if (subject.user === "thefutureisprivate" &&
+        action.id === "org.freedesktop.systemd1.manage-units") {
+        return polkit.Result.AUTH_ADMIN_KEEP;
+    }
+
+    return polkit.Result.NOT_HANDLED;
+});

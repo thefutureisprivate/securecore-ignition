@@ -100,6 +100,14 @@ storage:
       contents:
         source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/ssh/sshd_config.d/10-custom.conf' # yamllint disable-line rule:line-length
 
+    - path: '/etc/polkit-1/rules.d/49-run0-auth-keep.rules'
+      contents:
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/polkit-1/rules.d/49-run0-auth-keep.rules' # yamllint disable-line rule:line-length
+
+    - path: '/etc/polkit-1/polkitd.conf'
+      contents:
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/polkit-1/polkitd.conf' # yamllint disable-line rule:line-length
+
     - path: '/etc/containers/containers.conf'
       contents:
         source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/containers/containers.conf' # yamllint disable-line rule:line-length

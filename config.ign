@@ -42,6 +42,18 @@
         }
       },
       {
+        "path": "/etc/polkit-1/rules.d/49-run0-auth-keep.rules",
+        "contents": {
+          "source": "https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/polkit-1/rules.d/49-run0-auth-keep.rules"
+        }
+      },
+      {
+        "path": "/etc/polkit-1/polkitd.conf",
+        "contents": {
+          "source": "https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/polkit-1/polkitd.conf"
+        }
+      },
+      {
         "path": "/etc/containers/containers.conf",
         "contents": {
           "source": "https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/containers/containers.conf"
