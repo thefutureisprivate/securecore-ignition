@@ -55,6 +55,7 @@ systemd:
         ExecStart=/usr/bin/install -d -o thefutureisprivate -g thefutureisprivate -m 700 /var/home/thefutureisprivate/.config\n\
         ExecStart=/usr/bin/install -o thefutureisprivate -g thefutureisprivate -m 600 /dev/null /var/home/thefutureisprivate/.config/no-show-user-motd\n\
         ExecStart=/usr/bin/ujust toggle-bash-environment-lockdown true true\n\
+        ExecStart=/usr/bin/ujust set-container-userns on\n\
         ExecStart=/usr/bin/rpm-ostree install qemu-guest-agent\n\
         ExecStart=/usr/bin/systemctl disable rebase\n\
         ExecStart=/usr/bin/rm /etc/systemd/system/rebase.service\n\
@@ -72,7 +73,6 @@ systemd:
 storage:
   files:
     - path: '/etc/pki/containers/secureblue-2025.pub'
-      mode: 420
       contents:
         inline: "-----BEGIN PUBLIC KEY-----\n\
           MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEdruKsOhUkgdd0lNDHNBymE2Wyb/p\n\
@@ -80,7 +80,6 @@ storage:
           -----END PUBLIC KEY-----"
 
     - path: '/etc/containers/policy.json'
-      mode: 420
       overwrite: true
       contents:
         inline: "{\n\
@@ -97,6 +96,14 @@ storage:
             }\n\
           }\n\
         }"
+
+    - path: '/etc/sysctl.d/99-gvisor-ptrace.conf'
+      contents:
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/sysctl.d/99-gvisor-ptrace.conf' # yamllint disable-line rule:line-length
+
+    - path: '/etc/sysctl.d/90-podman-ipv6-forwarding.conf'
+      contents:
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/sysctl.d/90-podman-ipv6-forwarding.conf' # yamllint disable-line rule:line-length
 
     - path: '/etc/ssh/sshd_config.d/10-custom.conf'
       contents:
