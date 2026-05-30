@@ -51,6 +51,7 @@ systemd:
         ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'n\\ny\\ny\\n' | /usr/bin/ujust set-kargs-hardening\"\n\
         ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/mokutil --import /usr/share/pki/akmods/certs/akmods-secureblue.der\"\n\
         ExecStart=/usr/bin/ujust dns-selector resolver unbound\n\
+        ExecStart=/usr/bin/sed -i 's/^AutomaticUpdatePolicy=staged$/AutomaticUpdatePolicy=apply/' /etc/rpm-ostreed.conf\n\
         ExecStart=/usr/bin/ujust dns-selector dnssec on\n\
         ExecStart=/usr/bin/install -d -o thefutureisprivate -g thefutureisprivate -m 700 /var/home/thefutureisprivate/.config\n\
         ExecStart=/usr/bin/install -o thefutureisprivate -g thefutureisprivate -m 600 /dev/null /var/home/thefutureisprivate/.config/no-show-user-motd\n\
@@ -68,6 +69,9 @@ systemd:
       # yamllint enable rule:line-length
 
     - name: 'podman-auto-update.timer'
+      enabled: true
+
+    - name: 'rpm-ostreed-automatic.timer'
       enabled: true
 
 storage:
