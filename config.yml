@@ -57,6 +57,7 @@ systemd:
         ExecStart=/usr/bin/install -o thefutureisprivate -g thefutureisprivate -m 600 /dev/null /var/home/thefutureisprivate/.config/no-show-user-motd\n\
         ExecStart=/usr/bin/ujust toggle-bash-environment-lockdown true true\n\
         ExecStart=/usr/bin/ujust set-container-userns on\n\
+        ExecStart=/usr/bin/ujust set-ptrace container\n\
         ExecStart=/usr/bin/rpm-ostree install qemu-guest-agent\n\
         ExecStart=/usr/bin/systemctl disable rebase\n\
         ExecStart=/usr/bin/rm /etc/systemd/system/rebase.service\n\
@@ -100,10 +101,6 @@ storage:
             }\n\
           }\n\
         }"
-
-    - path: '/etc/sysctl.d/99-gvisor-ptrace.conf'
-      contents:
-        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/sysctl.d/99-gvisor-ptrace.conf' # yamllint disable-line rule:line-length
 
     - path: '/etc/sysctl.d/90-podman-ipv6-forwarding.conf'
       contents:
