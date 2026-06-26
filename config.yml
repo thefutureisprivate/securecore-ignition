@@ -49,7 +49,7 @@ systemd:
         RemainAfterExit=yes\n\
         ExecStart=/usr/bin/systemctl mask --now zincati.service\n\
         ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'n\\ny\\ny\\n' | /usr/bin/ujust set-kargs-hardening\"\n\
-        ExecStart=/usr/bin/bash -c \"/usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/mokutil --import /usr/share/pki/akmods/certs/akmods-secureblue.der\"\n\
+        ExecStart=/usr/bin/bash -c \"if { [ -e /dev/tpmrm0 ] || [ -e /dev/tpm0 ] || [ -d /sys/class/tpm/tpm0 ]; } && /usr/bin/ls /sys/firmware/efi/efivars/SecureBoot-* >/dev/null 2>&1; then /usr/bin/printf 'secureblue\\nsecureblue\\n' | /usr/bin/mokutil --import /usr/share/pki/akmods/certs/akmods-secureblue.der; else /usr/bin/echo 'Skipping MOK enrollment: TPM and Secure Boot support not detected'; fi\"\n\
         ExecStart=/usr/bin/ujust dns-selector resolver unbound\n\
         ExecStart=/usr/bin/sed -i 's/^AutomaticUpdatePolicy=staged$/AutomaticUpdatePolicy=apply/' /etc/rpm-ostreed.conf\n\
         ExecStart=/usr/bin/ujust dns-selector dnssec on\n\
@@ -110,13 +110,9 @@ storage:
       contents:
         source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/ssh/sshd_config.d/10-custom.conf' # yamllint disable-line rule:line-length
 
-    - path: '/etc/polkit-1/rules.d/49-run0-auth-keep.rules'
+    - path: '/etc/polkit-1/rules.d/49-passwordless.rules'
       contents:
-        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/polkit-1/rules.d/49-run0-auth-keep.rules' # yamllint disable-line rule:line-length
-
-    - path: '/etc/polkit-1/polkitd.conf'
-      contents:
-        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/polkit-1/polkitd.conf' # yamllint disable-line rule:line-length
+        source: 'https://raw.githubusercontent.com/thefutureisprivate/securecore-ignition/main/files/etc/polkit-1/rules.d/49-passwordless.rules' # yamllint disable-line rule:line-length
 
     - path: '/etc/containers/containers.conf'
       contents:

@@ -10,4 +10,4 @@
 - Enables Unbound with local DNSSEC validation
 - Enables Secureblue Bash environment lockdown for all users
 - Installs `qemu-guest-agent`
-- Enrolls the Secureblue Secure Boot certificate
+- Enrolls the Secureblue Secure Boot certificate when TPM and Secure Boot support are present
